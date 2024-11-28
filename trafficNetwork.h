@@ -25,6 +25,8 @@ public:
     TrafficNetwork(int num_vertices);
     ~TrafficNetwork();
     void Mapping_Roads(string csv);
+    void addnewroad(char start_intersection, char end_intersection, int distance);
+    void removeRoad(char start_intersection, char end_intersection);
     void Display();
 };
 

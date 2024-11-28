@@ -96,3 +96,25 @@ void TrafficNetwork::Display()
         cout << endl;
     }
 }
+
+// Function to add a new road
+void TrafficNetwork::addnewroad(char start_intersection, char end_intersection, int distance)
+{
+    int start_index = start_intersection - 'A';
+    int end_index = end_intersection - 'A';
+
+    matrix[start_index][end_index].distance = distance;
+    matrix[start_index][end_index].intersection = end_intersection;
+}
+
+// Function to remove a road
+void TrafficNetwork::removeRoad(char start_intersection, char end_intersection)
+{
+    int start_index = start_intersection - 'A';
+    int end_index = end_intersection - 'A';
+
+    matrix[start_index][end_index].distance = 0;
+    matrix[start_index][end_index].intersection = ' ';
+}
+
+
