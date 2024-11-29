@@ -97,6 +97,12 @@ void TrafficNetwork::Display()
     }
 }
 
+//Getter function for matrix
+node** TrafficNetwork::getmatrix()
+{
+    return matrix;
+}
+
 // Function to add a new road
 void TrafficNetwork::addnewroad(char start_intersection, char end_intersection, int distance)
 {
