@@ -58,21 +58,21 @@ void Vehicles::findShortestPath(int start, int end, int* pathTaken) {
 }
 
 void Vehicles::processVehicles(std::string csv) {
-    std::ifstream file(csv);
-    std::string line;
+    ifstream file(csv);
+    string line;
 
     if (!file.is_open()) {
-        std::cerr << "Error: Unable to open file " << csv << std::endl;
+        cerr << "Error: Unable to open file " << csv << endl;
         return;
     }
 
-    std::getline(file, line); // Skip the header
-    while (std::getline(file, line)) {
-        std::istringstream stream(line);
-        std::string vehicleID, start, end;
-        std::getline(stream, vehicleID, ',');
-        std::getline(stream, start, ',');
-        std::getline(stream, end, ',');
+    getline(file, line); // Skip the header
+    while (getline(file, line)) {
+        istringstream stream(line);
+        string vehicleID, start, end;
+        getline(stream, vehicleID, ',');
+        getline(stream, start, ',');
+        getline(stream, end, ',');
 
         char start_intersection = start[0];
         char end_intersection = end[0];
@@ -97,8 +97,8 @@ void Vehicles::printRoadUsage() {
     for (int i = 0; i < num_vertices; i++) {
         for (int j = 0; j < num_vertices; j++) {
             if (roadUsage[i][j] > 0) {
-                std::cout << char('A' + i) << " -> " << char('A' + j)
-                          << " : " << roadUsage[i][j] << " vehicles" << std::endl;
+                cout << char('A' + i) << " -> " << char('A' + j)
+                          << " : " << roadUsage[i][j] << " vehicles" << endl;
             }
         }
     }

@@ -3,10 +3,11 @@
 // Constructor for node
 node::node() : distance(0), intersection(' ') {}
 
-node::node(int distance, char intersection)
+node::node(int distance, char intersection, string status)
 {
     this->distance = distance;
     this->intersection = intersection;
+    this->status = status;
 }
 
 // Constructor for TrafficNetwork
@@ -22,6 +23,7 @@ TrafficNetwork::TrafficNetwork(int num_vertices)
         {
             matrix[i][j].distance = 0;
             matrix[i][j].intersection = ' ';
+            matrix[i][j].status = "Clear";
         }
     }
 }
@@ -75,6 +77,7 @@ void TrafficNetwork::Mapping_Roads(string csv)
 
         matrix[start_index][end_index].distance = distance;
         matrix[start_index][end_index].intersection = end_intersection;
+        matrix[start_index][end_index].status = "open";
     }
 
     file.close();

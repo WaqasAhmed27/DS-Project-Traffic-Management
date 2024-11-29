@@ -10,9 +10,10 @@ class node
 public:
     int distance;
     char intersection;
+    string status;
 
     node();
-    node(int distance, char intersection);
+    node(int distance, char intersection, string status);
 };
 
 class TrafficNetwork
