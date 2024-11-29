@@ -57,7 +57,7 @@ void Vehicles::findShortestPath(int start, int end, int* pathTaken) {
     delete[] queue;
 }
 
-void Vehicles::processVehicles(std::string csv) {
+void Vehicles::processVehicles(string csv) {
     ifstream file(csv);
     string line;
 
@@ -104,3 +104,72 @@ void Vehicles::printRoadUsage() {
     }
 }
 
+void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken) {
+    int* dist = new int[num_vertices];       // Array to store shortest distances
+    bool* visited = new bool[num_vertices]; 
+
+    int i = 0;
+
+    while (i < num_vertices) {
+        dist[i] = INT_MAX;  // Setting weights to MAX
+        visited[i] = false; //Marked Unvisited
+        path_taken[i] = -1; 
+        i++;
+    }
+
+    dist[start] = 0; // Setting start node distance to 0
+
+    int count = 0;
+    while (count < num_vertices - 1) {
+        int min_dist = INT_MAX;
+        int min_index = -1;
+
+        i = 0;
+        while (i < num_vertices) {
+            if (!visited[i] && dist[i] < min_dist) {
+                min_dist = dist[i];
+                min_index = i;
+            }
+            i++;
+        }
+
+        if (min_index == -1) {
+            break;
+        }
+
+        visited[min_index] = true;
+
+        i = 0;
+        while (i < num_vertices) {
+            if (!visited[i] && matrix[min_index][i].distance > 0) { // If neighbor exists
+                int new_dist = dist[min_index] + matrix[min_index][i].distance;
+                if (new_dist < dist[i]) {
+                    dist[i] = new_dist;
+                    path_taken[i] = min_index; // Update
+                }
+            }
+            i++;
+        }
+        count++;
+    }
+
+    // Print shortest distance
+    if (dist[end] == INT_MAX) {
+        cout << "No path exists between nodes " << char(start + 'A') << " and " << char(end + 'A') << endl;
+    } else {
+        cout << "Shortest distance: " << dist[end] << endl;
+    }
+
+    delete[] dist;
+    delete[] visited;
+}
+
+
+void Vehicles::printPath(int* pathTaken, int start, int end) {
+    if (pathTaken[end] == -1) {
+        cout << char(start + 'A') << " ";
+        return;
+    }
+    printPath(pathTaken, start, pathTaken[end]);
+    cout << char(end + 'A') << " ";
+}

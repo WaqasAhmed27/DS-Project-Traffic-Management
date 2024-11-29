@@ -7,6 +7,8 @@
 #include <sstream>
 #include "trafficNetwork.h"
 
+#define INT_MAX 2147483647      //Bohot bara number
+
 class Vehicles {
 private:
     node** matrix;
@@ -21,7 +23,8 @@ public:
     void findShortestPath(int start, int end, int* pathTaken);
     void processVehicles(string csv);
     void printRoadUsage();
+    void findShortestPathDijkstra(int start, int end, int* pathTaken);
+    void printPath(int* pathTaken, int start, int end);
 };
 
 #endif
-
