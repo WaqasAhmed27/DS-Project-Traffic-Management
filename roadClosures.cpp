@@ -109,6 +109,3 @@ void road_closures::display_all_roads()
         }
     }
 }
-
-
-

@@ -125,5 +125,3 @@ void TrafficNetwork::removeRoad(char start_intersection, char end_intersection)
     matrix[start_index][end_index].distance = 0;
     matrix[start_index][end_index].intersection = ' ';
 }
-
-

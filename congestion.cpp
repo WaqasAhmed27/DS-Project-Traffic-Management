@@ -157,7 +157,7 @@ void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken) {
     if (dist[end] == INT_MAX) {
         cout << "No path exists between nodes " << char(start + 'A') << " and " << char(end + 'A') << endl;
     } else {
-        cout << "Shortest distance: " << dist[end] << endl;
+        cout << "\nShortest distance from " << char(start + 'A') << " to " << char(end + 'A') << " is " << dist[end] << endl;
     }
 
     delete[] dist;
