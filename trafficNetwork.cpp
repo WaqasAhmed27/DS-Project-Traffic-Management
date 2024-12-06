@@ -8,6 +8,7 @@ node::node(int distance, char intersection, string status)
     this->distance = distance;
     this->intersection = intersection;
     this->status = status;
+    this->numofvehicles=0;
 }
 
 // Constructor for TrafficNetwork

@@ -3,27 +3,16 @@
 Vehicles::Vehicles(int num_vertices, node** matrix) {
     this->matrix = matrix;
     this->num_vertices = num_vertices;
-    roadUsage = new int*[num_vertices];
-    for (int i = 0; i < num_vertices; i++) {
-        roadUsage[i] = new int[num_vertices];
-        for (int j = 0; j < num_vertices; j++) {
-            roadUsage[i][j] = 0;
-        }
-    }
+
 }
 
-Vehicles::~Vehicles() {
-    for (int i = 0; i < num_vertices; i++) {
-        delete[] roadUsage[i];
-    }
-    delete[] roadUsage;
-}
+Vehicles::~Vehicles() {}
 
 void Vehicles::updateRoadUsage(int start, int end, int* pathTaken) {
     int current = end;
     while (pathTaken[current] != -1) {
         int prev = pathTaken[current];
-        roadUsage[prev][current]++;
+        matrix[prev][current].numofvehicles++;
         current = prev;
     }
 }
@@ -96,9 +85,9 @@ void Vehicles::processVehicles(string csv) {
 void Vehicles::printRoadUsage() {
     for (int i = 0; i < num_vertices; i++) {
         for (int j = 0; j < num_vertices; j++) {
-            if (roadUsage[i][j] > 0) {
+            if (matrix[i][j].numofvehicles > 0) {
                 cout << char('A' + i) << " -> " << char('A' + j)
-                          << " : " << roadUsage[i][j] << " vehicles" << endl;
+                          << " : " << matrix[i][j].numofvehicles << " vehicles" << endl;
             }
         }
     }
@@ -202,6 +191,7 @@ void Vehicles::NumOfVehicles(string csv) {
 
         if (start_index >= 0 && start_index < num_vertices) {
             vehicleCount[start_index]++;
+            matrix[start_index][0].numofvehicles++;
         } else {
             cerr << "Warning: Invalid start intersection " << start << endl;
         }
@@ -213,4 +203,150 @@ void Vehicles::NumOfVehicles(string csv) {
         cout << "Intersection " << intersection << ": " << vehicleCount[i] << " vehicles." << endl;
     }
     delete[] vehicleCount;
+}
+
+// Constructor
+heapNode::heapNode(int num_of_vehicles) 
+{
+    this->num_of_vehicles = num_of_vehicles;
+    left = right = nullptr;
+}
+
+// Constructor
+MinHeap::MinHeap()
+{
+    root = nullptr;
+}
+
+// Function to count the number of nodes in the heap
+int MinHeap::countnodes(heapNode* current)
+{
+    if(current ==nullptr)
+        return 0;
+    
+    return 1 + countnodes(current->left) + countnodes(current->right);  
+}
+
+// Helper function to find the node at a given index
+heapNode* MinHeap::findnode(heapNode* root, int index, int& count)
+{
+    if(root == nullptr)
+        return nullptr;
+
+    if(count == index)
+        return root;
+
+    count++;
+
+    heapNode* left = findnode(root->left, index, count);
+    
+    if(left)
+        return left;
+    
+    return findnode(root->right, index, count);
+
+}
+
+// Function to find the node at a given index
+heapNode* MinHeap:: findnode(heapNode* root, int index)
+{
+    int count =0;
+    return findnode(root, index, count);    
+}
+
+//Findinf the parent of the given child 
+heapNode* MinHeap:: findParent(heapNode* current, heapNode* child)
+{
+    if(current == nullptr || (current->left == nullptr && current->right == nullptr))
+    {
+        return nullptr;
+    }
+
+    if(child == current->left || child == current->right)
+    {
+        return current;
+    }
+
+    heapNode* left = findParent(current->left, child);
+    if(left)
+        return left;
+    return findParent(current->right, child);
+}
+
+// Function to heapify up to maintain the min heap property  
+void MinHeap::heapifyup(heapNode* node)
+{
+    if(node == nullptr || root == nullptr)
+        return;
+    
+    heapNode* parent = findParent(root, node);
+
+    if (parent != nullptr && parent->num_of_vehicles > node->num_of_vehicles)
+    {
+        swap(parent->num_of_vehicles, node->num_of_vehicles);
+        heapifyup(parent);
+    }
+}
+
+
+// Function to insert a new node into the heap while maintaining the min heap property and structure property
+void MinHeap::insert(int num_of_vehicles) 
+{
+    if (root == nullptr) 
+    {
+        root = new heapNode(num_of_vehicles);
+    } 
+    else 
+    {
+        int no_of_nodes = countnodes(root);// Count the number of nodes in the heap
+        heapNode* point = findnode(root, no_of_nodes - 1); //Finding the point at which the new node is to be inserted
+
+        // Insert the new node as the left child if the left child is empty and if not insert as the right child
+        if (point->left == nullptr) 
+        {
+            point->left = new heapNode(num_of_vehicles);
+            heapifyup(point->left);
+        }             
+        else             
+        {
+            point->right = new heapNode(num_of_vehicles);
+            heapifyup(point->right);
+        }
+         
+    }
+}
+
+// Function to construct the min heap from the given num of vehicles on each road in the matrix 
+void MinHeap::custructMinHeap(node** matrix, int num_vertices)
+{
+    for(int i =0; i<num_vertices; i++)
+    {
+        for(int j =0; j<num_vertices; j++)
+        {
+            if(matrix[i][j].numofvehicles > 0)
+            {
+                insert(matrix[i][j].numofvehicles);
+            }
+        }
+    }
+}   
+
+// Function to display the heap
+void MinHeap::display()
+{
+    if(root == nullptr)
+    {
+        cout<<"Heap is empty!"<<endl;
+        return;
+    }
+
+    cout<<"Heap: "<<endl;
+
+    int no_of_nodes = countnodes(root);
+    for(int i =0; i<no_of_nodes; i++)
+    {
+        heapNode* current = findnode(root, i);
+        cout<<current->num_of_vehicles<<" ";
+    }
+    cout<<endl;
 }

@@ -11,6 +11,7 @@ public:
     int distance;
     char intersection;
     string status;
+    int numofvehicles;
 
     node();
     node(int distance, char intersection, string status);
