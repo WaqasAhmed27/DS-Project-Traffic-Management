@@ -164,7 +164,6 @@ void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken) {
     delete[] visited;
 }
 
-
 void Vehicles::printPath(int* pathTaken, int start, int end) {
     if (pathTaken[end] == -1) {
         cout << char(start + 'A') << " ";
@@ -172,4 +171,46 @@ void Vehicles::printPath(int* pathTaken, int start, int end) {
     }
     printPath(pathTaken, start, pathTaken[end]);
     cout << char(end + 'A') << " ";
+}
+
+void Vehicles::NumOfVehicles(string csv) {
+    ifstream file(csv);
+    string line;
+
+    if (!file.is_open()) {
+        cerr << "Error: Unable to open file " << csv << endl;
+        return;
+    }
+
+    getline(file, line);
+
+    // Array keeps track of vehicles on each road
+    int* vehicleCount = new int[num_vertices];
+    for (int i = 0; i < num_vertices; i++) {
+        vehicleCount[i] = 0;
+    }
+
+    while (getline(file, line)) {
+        istringstream stream(line);
+        string vehicleID, start, end;
+        getline(stream, vehicleID, ',');
+        getline(stream, start, ',');
+        getline(stream, end, ',');
+
+        char start_intersection = start[0];
+        int start_index = start_intersection - 65; // Change to indexes
+
+        if (start_index >= 0 && start_index < num_vertices) {
+            vehicleCount[start_index]++;
+        } else {
+            cerr << "Warning: Invalid start intersection " << start << endl;
+        }
+    }
+
+    file.close();
+    for (int i = 0; i < num_vertices; i++) {
+        char intersection = char(i + 65);  // Convert back to letter
+        cout << "Intersection " << intersection << ": " << vehicleCount[i] << " vehicles." << endl;
+    }
+    delete[] vehicleCount;
 }
