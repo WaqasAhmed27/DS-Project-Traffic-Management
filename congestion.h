@@ -25,6 +25,7 @@ public:
     void printRoadUsage();
     void findShortestPathDijkstra(int start, int end, int* pathTaken);
     void printPath(int* pathTaken, int start, int end);
+    void NumOfVehicles(string csv);
 };
 
 #endif
