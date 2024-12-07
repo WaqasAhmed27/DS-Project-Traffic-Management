@@ -25,6 +25,7 @@ TrafficNetwork::TrafficNetwork(int num_vertices)
             matrix[i][j].distance = 0;
             matrix[i][j].intersection = ' ';
             matrix[i][j].status = "Clear";
+            matrix[i][j].numofvehicles = 0;
         }
     }
 }
