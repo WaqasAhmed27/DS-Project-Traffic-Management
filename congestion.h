@@ -14,8 +14,9 @@ struct heapNode
     int num_of_vehicles;
     heapNode* left;
     heapNode* right;
-
-    heapNode(int num_of_vehicles);
+    char start_intersection;
+    char end_intersection;
+    heapNode(int num_of_vehicles, char start_intersection, char end_intersection);
 };
 
 class MinHeap
@@ -30,8 +31,10 @@ private:
 
 public:
     MinHeap();
-    void insert(int num_of_vehicles);
+    void insert(int num_of_vehicles, char start_intersection, char end_intersection);
     void custructMinHeap(node** matrix, int num_vertices);
+    heapNode* exractMaxNode(heapNode*& root);
+    heapNode* FindMostCongestedRoad();
     void display();
 };
 

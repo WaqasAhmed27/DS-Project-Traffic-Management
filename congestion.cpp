@@ -206,9 +206,11 @@ void Vehicles::NumOfVehicles(string csv) {
 }
 
 // Constructor
-heapNode::heapNode(int num_of_vehicles) 
+heapNode::heapNode(int num_of_vehicles, char start_intersection, char end_intersection) 
 {
     this->num_of_vehicles = num_of_vehicles;
+    this->start_intersection = start_intersection;
+    this->end_intersection = end_intersection;
     left = right = nullptr;
 }
 
@@ -290,11 +292,11 @@ void MinHeap::heapifyup(heapNode* node)
 
 
 // Function to insert a new node into the heap while maintaining the min heap property and structure property
-void MinHeap::insert(int num_of_vehicles) 
+void MinHeap::insert(int num_of_vehicles, char start_intersection, char end_intersection) 
 {
     if (root == nullptr) 
     {
-        root = new heapNode(num_of_vehicles);
+        root = new heapNode(num_of_vehicles, start_intersection, end_intersection);
     } 
     else 
     {
@@ -304,12 +306,12 @@ void MinHeap::insert(int num_of_vehicles)
         // Insert the new node as the left child if the left child is empty and if not insert as the right child
         if (point->left == nullptr) 
         {
-            point->left = new heapNode(num_of_vehicles);
+            point->left = new heapNode(num_of_vehicles, start_intersection, end_intersection);
             heapifyup(point->left);
         }             
         else             
         {
-            point->right = new heapNode(num_of_vehicles);
+            point->right = new heapNode(num_of_vehicles, start_intersection, end_intersection);
             heapifyup(point->right);
         }
          
@@ -325,7 +327,7 @@ void MinHeap::custructMinHeap(node** matrix, int num_vertices)
         {
             if(matrix[i][j].numofvehicles > 0)
             {
-                insert(matrix[i][j].numofvehicles);
+                insert(matrix[i][j].numofvehicles, i+'A', j+'A');//Converting the indexes i and j to corresponding intersections   
             }
         }
     }
@@ -339,7 +341,6 @@ void MinHeap::display()
         cout<<"Heap is empty!"<<endl;
         return;
     }
-
     cout<<"Heap: "<<endl;
 
     int no_of_nodes = countnodes(root);
@@ -349,4 +350,48 @@ void MinHeap::display()
         cout<<current->num_of_vehicles<<" ";
     }
     cout<<endl;
+}
+
+// Helper function to extract the node with the maximum number of vehicles from the heap
+heapNode* MinHeap::exractMaxNode(heapNode*& root)
+{
+    if(root == nullptr)
+    {
+        return nullptr;
+    }
+
+    if(root->left == nullptr && root->right == nullptr)
+    {
+        return root;
+    }
+
+    heapNode* left = exractMaxNode(root->left);// Finding max node in the left subtree
+    heapNode* right = exractMaxNode(root->right);// Finding max node in the right subtree
+
+    heapNode* max = root;
+
+    if(left!= nullptr && left->num_of_vehicles > max->num_of_vehicles)// Comparing the max node in the left subtree with the root
+    {
+        max = left;
+    }
+    if(right != nullptr && right->num_of_vehicles > max->num_of_vehicles)// Comparing the max node in the right subtree with the root
+    {
+        max = right;
+    }
+
+    return max;
+}
+
+// Function to find the most congested road in the heap
+heapNode* MinHeap::FindMostCongestedRoad()
+{
+    if(root == nullptr)
+    {
+        return nullptr;
+    }
+
+    heapNode* max = exractMaxNode(root);
+
+    cout<<"Most Congested Road: "<<max->start_intersection<<" -> "<<max->end_intersection<<" : "<<max->num_of_vehicles<<" vehicles"<<endl;
+    return max;
 }
