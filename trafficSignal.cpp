@@ -77,13 +77,29 @@ void TrafficSignal::adjustGreenTimes(TrafficNetwork& network, string vehiclesCSV
         } else {
             cout << "\nUpdated Green Light Times:\n";
         }
-        for (int i = 0; i <= 26; i++) {
-            for (int j = 0; j <= 26; j++){
-                if (network.getmatrix()[i][j].numofvehicles > 0 && greenTimes[i] != 0 && intersections[i] >= 65 && intersections[i] <= 90) {
+        for (int i = 0; i < totalSignals; i++) {  // Use totalSignals to ensure we don't exceed bounds
+                if (greenTimes[i] != 0 && intersections[i] >= 65 && intersections[i] <= 90) {
                     cout << "Intersection " << intersections[i] << ": " << greenTimes[i] << " seconds" << endl;
-                    i++;
                 }
-            }   
         }
         cout << endl;
+        
     }
+
+
+    void TrafficSignal::OverrideTiming(int seconds, TrafficNetwork& network, char vertice) {
+        if (vertice >= 'a' && vertice<= 'z') {
+            vertice -= 32;
+        }
+        for (int i = 0; i < totalSignals; i++) {
+            if (intersections[i] == vertice) {
+                greenTimes[i] = seconds;
+                cout << "Green light at Intersection " << vertice << " will now be open for " << seconds << " seconds.\n";
+                displayGreenTimes(1,network);
+                return;
+            }
+        }
+
+            cout << "Intersection " << vertice << " not found." << endl;
+    }
+
