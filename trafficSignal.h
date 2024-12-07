@@ -20,6 +20,9 @@ public:
     void readTrafficSignalData(string csv);
     void adjustGreenTimes(TrafficNetwork& network, string vehiclesCSV, int vertices, Vehicles vehicles);
     void displayGreenTimes(int a, TrafficNetwork& network);
+    void OverrideTiming(int timing, TrafficNetwork& network, char vertice);
 };
 
 #endif
+
+
