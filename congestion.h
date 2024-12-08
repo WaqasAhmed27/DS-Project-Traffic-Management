@@ -55,8 +55,8 @@ public:
     void findShortestPathDijkstra(int start, int end, int* pathTaken, road_closures& roadChecker);
     void printPath(int* pathTaken, int start, int end);
     void NumOfVehicles(string csv);
-    void findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound);
-    void findAllPaths(char startc, char endc);
+    void findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound, road_closures& roadChecker);
+    void findAllPaths(char startc, char endc, road_closures& roadChecker);
 };
 
 #endif

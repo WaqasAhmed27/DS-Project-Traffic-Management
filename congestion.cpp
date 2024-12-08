@@ -228,39 +228,48 @@ void Vehicles::NumOfVehicles(string csv) {
 
 
 // Helper function to find all possible paths between two intersections
-void Vehicles::findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound) {
-    visited[current] = true;          // vist marked
-    path[path_index] = current;       // adding current node to path
-    path_index++;                  
+void Vehicles::findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound, road_closures& roadChecker) {
+    visited[current] = true;          // Mark current node as visited
+    path[path_index] = current;       // Add current node to path
+    path_index++;                   
 
     if (current == end)
     {
-        // Print the current path
-        pathFound = true;             //path found
+        // Print the current path if it reaches the end
+        pathFound = true;             // Path found flag
         for (int i = 0; i < path_index; i++) {
             cout << char(path[i] + 'A') << (i < path_index - 1 ? " -> " : "\n");
         }
     } 
     else 
     {
-        // Recurse for all adjacent nodes
         for (int i = 0; i < num_vertices; i++) 
         {
+            // Check if the edge exists and the node is unvisited
             if (matrix[current][i].distance != 0 && !visited[i]) 
             {   
-                //visit only unvisited nodes
-                findAllPathsHelper(i, end, visited, path, path_index, pathFound);
+                // Check if the path is not blocked or under repair
+                if (roadChecker.is_path_blocked(char(current + 'A'), char(i + 'A'))) 
+                {
+                    cout << "Path from " << char(current + 'A') << " to " << char(i + 'A') << " is blocked. Skipping...\n";
+                    continue;
+                }
+                if (roadChecker.is_path_underrepair(char(current + 'A'), char(i + 'A'))) 
+                {
+                    cout << "Path from " << char(current + 'A') << " to " << char(i + 'A') << " is under repair. Skipping...\n";
+                    continue;
+                }
+                findAllPathsHelper(i, end, visited, path, path_index, pathFound, roadChecker);
             }
         }
     }
 
-    // Backtracking
-    visited[current] = false;         //unmarking visited node
+    // Backtrack
+    visited[current] = false;         // Unmark visited node
 }
 
-
 // Function to find all possible paths between two intersections
-void Vehicles::findAllPaths(char startc, char endc) 
+void Vehicles::findAllPaths(char startc, char endc, road_closures& roadChecker) 
 {
     int start = startc - 'A';       
     int end = endc - 'A';             
@@ -270,15 +279,16 @@ void Vehicles::findAllPaths(char startc, char endc)
     int path_index = 0;
     bool path_found = false;                // Flag to indicate if a path is found  
 
-    // Initialize visited array
-    for (int i = 0; i < num_vertices; i++) {
+    // Initialize 
+    for (int i = 0; i < num_vertices; i++) 
+    {
         visited[i] = false;
     }
 
-    //helper call
-    findAllPathsHelper(start, end, visited, path, path_index, path_found);
+    // Call helper function to find all paths
+    findAllPathsHelper(start, end, visited, path, path_index, path_found, roadChecker);
 
-    //no path found
+    // No path found
     if (!path_found) 
     {
         cout << "No paths exist between " << startc << " and " << endc << endl;
@@ -287,6 +297,7 @@ void Vehicles::findAllPaths(char startc, char endc)
     delete[] visited; 
     delete[] path;   
 }
+
 
                                             ////////////Heap Implementation To find the most congested road/////////////////////
 
