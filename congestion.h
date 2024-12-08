@@ -21,25 +21,6 @@ struct heapNode
     heapNode(int num_of_vehicles, char start_intersection, char end_intersection);
 };
 
-class MinHeap
-{
-private:
-    heapNode* root;
-    void heapifyup(heapNode* current);
-    int countnodes(heapNode* current);
-    heapNode* findnode(heapNode* current, int index, int& count);
-    heapNode* findnode(heapNode* root, int index);
-    heapNode* findParent(heapNode* current, heapNode* child);
-
-public:
-    MinHeap();
-    void insert(int num_of_vehicles, char start_intersection, char end_intersection);
-    void constructMinHeap(node** matrix, int num_vertices);
-    heapNode* exractMaxNode(heapNode*& root);
-    heapNode* FindMostCongestedRoad();
-    void display();
-};
-
 class Vehicles {
 private:
     node** matrix;
@@ -61,5 +42,28 @@ public:
     void averageTravelTimePerVehicle(int num_vertices, node** matrix);
     int* findAlternativePath(char startc, char endc, road_closures& roadChecker);
 };
+
+
+class MinHeap
+{
+private:
+    heapNode* root;
+    void heapifyup(heapNode* current);
+    int countnodes(heapNode* current);
+    heapNode* findnode(heapNode* current, int index, int& count);
+    heapNode* findnode(heapNode* root, int index);
+    heapNode* findParent(heapNode* current, heapNode* child);
+
+public:
+    MinHeap();
+    void insert(int num_of_vehicles, char start_intersection, char end_intersection);
+    void constructMinHeap(node** matrix, int num_vertices);
+    void reduceCongestion(heapNode* mostCongestedRoad,  node** matrix, int num_vertices,road_closures& road_closures, Vehicles& vehicles);
+    heapNode* exractMaxNode(heapNode*& root);
+    heapNode* FindMostCongestedRoad();
+    void display();
+};
+
+
 
 #endif

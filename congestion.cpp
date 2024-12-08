@@ -3,6 +3,8 @@
                                             ///////////Implementation of Vehicles class///////////////////////
 
 
+// Vehicles;
+
 Vehicles::Vehicles(int num_vertices, node** matrix) {
     this->matrix = matrix;
     this->num_vertices = num_vertices;
@@ -235,6 +237,7 @@ void Vehicles::findAllPathsHelper(int current, int end, bool* visited, int* path
     if (current == end)
     {
         // Print the current path if it reaches the end
+
         pathFound = true;             // Path found flag
         for (int i = 0; i < path_index; i++) {
             cout << char(path[i] + 'A') << (i < path_index - 1 ? " -> " : "\n");
@@ -597,4 +600,36 @@ int* Vehicles::findAlternativePath(char startc, char endc, road_closures& roadCh
     delete[] visited;
     delete[] stack;
     return path_taken;  // Return the path 
+}
+
+void MinHeap::reduceCongestion(heapNode* congested_road, node** matrix, int num_vertices, road_closures& road_closures, Vehicles& vehicles) {     
+    if (congested_road == nullptr) {        
+        cout << "No road to reduce congestion!" << endl;
+        return;
+    }
+    int* path_taken = vehicles.findAlternativePath(congested_road->start_intersection, congested_road->end_intersection, road_closures);
+
+    if(path_taken == nullptr)
+    {
+        cout<<"There is no alternative path between "<< congested_road->start_intersection <<"->"<<congested_road->end_intersection<<" to divert traffic"<<endl;
+        return;
+    }
+
+    int start = congested_road->start_intersection - 'A';
+    int end = congested_road->end_intersection - 'A';
+
+    while (congested_road->num_of_vehicles > 3) {         
+        congested_road->num_of_vehicles--;         
+        matrix[start][end].numofvehicles--;         
+        vehicles.updateRoadUsage(start, end, path_taken);      
+    }
+
+    if (congested_road->num_of_vehicles <= 3) {        
+        cout << "Congestion reduced to acceptable level on road from " 
+             << congested_road->start_intersection << " to " 
+             << congested_road->end_intersection << endl;
+    }
+
+    // Free the path_taken memory if dynamically allocated
+    delete[] path_taken;
 }

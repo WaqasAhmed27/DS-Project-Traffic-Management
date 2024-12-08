@@ -17,8 +17,12 @@ void Dashboard::Simulate() {
     Vehicles vehicles(NUM_VERTICES, network.getmatrix());
     vehicles.processVehicles("vehicles.csv");
 
+    MinHeap heap;
+    heap.constructMinHeap(network.getmatrix(), NUM_VERTICES);
+            
+
     int choice = 0;
-    while (choice != 12) 
+    while (choice != 13) 
     {
         cout << "\nWELCOME TO TRAFFIC MANAGEMENT SYSTEM\n";
         cout << "------------------------------------\n";
@@ -34,11 +38,12 @@ void Dashboard::Simulate() {
         cout << "9. Display Shortest Path Between Two Intersections\n";
         cout << "10. Display Number Of Vehicles On Each Road\n";
         cout << "11. Display Average Travel Time Per Vehicle\n";
-        cout << "12. Exit\n";
+        cout<<"12. Reduce congestion\n";
+        cout << "13. Exit\n";
         cout<<"Enter Choice: ";
         cin >> choice;
 
-        if (choice == 12) 
+        if (choice == 13) 
         {
             //quit
             cout << "Exiting...\n";
@@ -178,8 +183,6 @@ void Dashboard::Simulate() {
         } 
         else if (choice == 8) 
         {
-            MinHeap heap;
-            heap.constructMinHeap(network.getmatrix(), NUM_VERTICES);
             heapNode* mostCongestedRoad = heap.FindMostCongestedRoad();
         } 
         else if (choice == 9) 
@@ -192,7 +195,7 @@ void Dashboard::Simulate() {
             {
                 start -= 32;
             }
-            if(start < 'A' || start > 'Z')
+            if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
                 continue;
@@ -223,6 +226,10 @@ void Dashboard::Simulate() {
         else if (choice == 11) 
         {
             vehicles.averageTravelTimePerVehicle(NUM_VERTICES, network.getmatrix());
+        }
+        else if(choice == 12)
+        {
+            heap.reduceCongestion(heap.FindMostCongestedRoad(), network.getmatrix(), NUM_VERTICES, closures, vehicles);   
         } 
         else 
         {
