@@ -102,4 +102,3 @@ void TrafficSignal::adjustGreenTimes(TrafficNetwork& network, string vehiclesCSV
 
             cout << "Intersection " << vertice << " not found." << endl;
     }
-

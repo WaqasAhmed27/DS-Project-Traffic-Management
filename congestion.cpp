@@ -492,4 +492,3 @@ heapNode* MinHeap::FindMostCongestedRoad()
     cout<<"Most Congested Road: "<<max->start_intersection<<" -> "<<max->end_intersection<<" : "<<max->num_of_vehicles<<" vehicles"<<endl;
     return max;
 }
-
