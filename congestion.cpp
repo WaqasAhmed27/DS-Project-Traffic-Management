@@ -3,61 +3,21 @@
                                             ///////////Implementation of Vehicles class///////////////////////
 
 
-Vehicles::Vehicles(int num_vertices, node** matrix, int tableSize) : num_vertices(num_vertices), matrix(matrix), tableSize(100) {
+Vehicles::Vehicles(int num_vertices, node** matrix) {
+    this->matrix = matrix;
+    this->num_vertices = num_vertices;
 
-    roadUsage = new int*[num_vertices];
-    for (int i = 0; i < num_vertices; i++) {
-        roadUsage[i] = new int[num_vertices];
-        for (int j = 0; j < num_vertices; j++) {
-            roadUsage[i][j] = 0;
-        }
-    }
-
-    // Initialize hash table
-    hashTable = new VehicleDetails[tableSize];
-    for (int i = 0; i < tableSize; i++) {
-        hashTable[i].isOccupied = false;  // Mark all slots as empty initially
-    }
 }
 
-Vehicles::~Vehicles() {
-    for (int i = 0; i < num_vertices; i++) {
-        delete[] roadUsage[i];
-    }
-    delete[] roadUsage;
-    delete[] hashTable;
-}
+Vehicles::~Vehicles() {}
 
 void Vehicles::updateRoadUsage(int start, int end, int* pathTaken) {
     int current = end;
     while (pathTaken[current] != -1) {
         int prev = pathTaken[current];
         matrix[prev][current].numofvehicles++;
-        roadUsage[prev][current]++;
         current = prev;
     }
-}
-
-int Vehicles::hashFunction(string StartIntersection) {
-    int index = 0;
-    for (char c : StartIntersection) {
-        index = (index * 31 + c) % tableSize;
-    }
-    return index;
-}
-
-void Vehicles::insertToHashTable(string StartIntersection) {
-    int index = hashFunction(StartIntersection);
-    while (hashTable[index].isOccupied) { // Linear
-        if (hashTable[index].StartIntersection == StartIntersection) {
-            hashTable[index].vehicleCount++;
-            return;
-        }
-        index = (index + 1) % tableSize;  // Next index
-    }
-    hashTable[index].StartIntersection = StartIntersection; // If slot is empty - insert the entry
-    hashTable[index].vehicleCount = 1;
-    hashTable[index].isOccupied = true;
 }
 
 //Funciton to find the shortest path between two intersections
@@ -100,31 +60,33 @@ void Vehicles::processVehicles(string csv) {
         return;
     }
 
-    getline(file, line);  // Skip header line
+    getline(file, line); // Skip the header
     while (getline(file, line)) {
         istringstream stream(line);
         string vehicleID, start, end;
         getline(stream, vehicleID, ',');
         getline(stream, start, ',');
         getline(stream, end, ',');
+
         char start_intersection = start[0];
         char end_intersection = end[0];
+
         int start_index = start_intersection - 65;
         int end_index = end_intersection - 65;
+
         int* pathTaken = new int[num_vertices];
         for (int i = 0; i < num_vertices; i++) {
             pathTaken[i] = -1;
         }
+
         findShortestPath(start_index, end_index, pathTaken);
         updateRoadUsage(start_index, end_index, pathTaken);
-
-        string StartIntersection = start;
-        insertToHashTable(StartIntersection);
-
         delete[] pathTaken;
     }
+
     file.close();
 }
+
 
 //Print the road usage( Displaying the number of vehicles on each road)
 void Vehicles::printRoadUsage() {
@@ -138,13 +100,6 @@ void Vehicles::printRoadUsage() {
     }
 }
 
-void Vehicles::printVehicleDetails() {
-    for (int i = 0; i < tableSize; i++) {
-        if (hashTable[i].isOccupied) {
-            cout << hashTable[i].StartIntersection << " : " << hashTable[i].vehicleCount << " vehicles" << endl;
-        }
-    }
-}
 
 // Function to find the shortest path between two intersections using Dijkstra's algorithm
 void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, road_closures& road_checker) {
@@ -181,18 +136,17 @@ void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, roa
             // Skip the paths that are blocked or under repair
             if (!visited[i] && matrix[min_index][i].distance > 0) {
                 if (road_checker.is_path_blocked(char(min_index + 'A'), char(i + 'A'))) {
-                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') 
-                         << " is blocked. Rerouting...\n";
+                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') << " is blocked. Rerouting...\n";
                     continue; // Skip blocked paths
                 }
                 if (road_checker.is_path_underrepair(char(min_index + 'A'), char(i + 'A'))) {
-                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') 
-                         << " is under repair. Rerouting...\n";
+                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') << " is under repair. Rerouting...\n";
                     continue; // Skip paths under repair
                 }
 
                 int new_dist = dist[min_index] + matrix[min_index][i].distance;
-                if (new_dist < dist[i]) {
+                if (new_dist < dist[i]) 
+                {
                     dist[i] = new_dist;
                     path_taken[i] = min_index; // Update the path
                 }
@@ -558,4 +512,89 @@ heapNode* MinHeap::FindMostCongestedRoad()
 
     cout<<"Most Congested Road: "<<max->start_intersection<<" -> "<<max->end_intersection<<" : "<<max->num_of_vehicles<<" vehicles"<<endl;
     return max;
+}
+
+// This function is used to find the alternative path for traffic congestion to re-route it
+int* Vehicles::findAlternativePath(char startc, char endc, road_closures& roadChecker) 
+{
+    int start = startc - 'A'; 
+    int end = endc - 'A';    
+    
+    bool* visited = new bool[num_vertices];  // To track visited nodes
+    int* path_taken = new int[num_vertices]; // To store the path
+    int path_index = 0;  // Index to track the current position in the path
+    bool path_found = false;  // Flag to indicate if we found a path
+
+    // Initialize visited array
+    for (int i = 0; i < num_vertices; i++) 
+    {
+        visited[i] = false;  //marked as unvisited
+        path_taken[i] = -1;   // Marked as not part of the path
+    }
+
+    int* stack = new int[num_vertices];
+    int stack_size = 0;
+
+    stack[stack_size++] = start;
+    visited[start] = true;
+
+    while (stack_size > 0 && !path_found) 
+    {
+        int current = stack[stack_size - 1];
+        stack_size--;  //pop
+
+        // Add the current node to the path
+        path_taken[path_index++] = current;
+
+        // If we've reached the destination, we found a path
+        if (current == end) 
+        {
+            path_found = true;
+            break;
+        }
+
+        // Explore all adjacent nodes
+        bool moved = false;
+        for (int i = 0; i < num_vertices; i++) 
+        {
+            if (matrix[current][i].distance != 0 && !visited[i]) 
+            {
+                // Check if the path is not blocked or under repair
+                if (roadChecker.is_path_blocked(char(current + 'A'), char(i + 'A'))) 
+                {
+                    continue;  // Skip blocked paths
+                }
+                if (roadChecker.is_path_underrepair(char(current + 'A'), char(i + 'A'))) 
+                {
+                    continue;  // Skip under-repair paths
+                }
+
+                // Push the adjacent node onto the stack for DFS
+                stack[stack_size++] = i;
+                visited[i] = true;
+                moved = true;
+                break;  // Only move to one unvisited adjacent node at a time
+            }
+        }
+
+        // If we didn't move to any adjacent node, remove the current node from the path
+        if (!moved) 
+        {
+            path_index--;  //removing the current node
+            visited[current] = false;  //Marked as unvisited
+        }
+    }
+
+    // If no path was found, set path_taken to -1 for all nodes
+    if (!path_found) 
+    {
+        delete[] visited;
+        delete[] stack;
+        delete[] path_taken;
+        return nullptr;  // No path exists
+    }
+
+    delete[] visited;
+    delete[] stack;
+    return path_taken;  // Return the path 
 }

@@ -40,37 +40,26 @@ public:
     void display();
 };
 
-struct VehicleDetails {
-    string StartIntersection;
-    int vehicleCount;
-    bool isOccupied;
-};
-
 class Vehicles {
 private:
     node** matrix;
-    int** roadUsage;
     int num_vertices;
-    VehicleDetails* hashTable;  // Hash table to store vehicle details
-    int tableSize;
 
-    // Simple hash function to map start-end pair to an index
-    int hashFunction(string StartIntersection);
-
-    // Handle collisions using linear probing
-    void insertToHashTable(string StartIntersection);
 public:
-    void printRoadUsage();
-    void printRoadUsageHT();
-    void printVehicleDetails();
-    void NumOfVehicles(string csv);
-    void processVehicles(string csv);
-    void printPath(int* pathTaken, int start, int end);
+    Vehicles(int num_vertices, node** matrix);
+    ~Vehicles();
+
     void updateRoadUsage(int start, int end, int* pathTaken);
     void findShortestPath(int start, int end, int* pathTaken);
-    void averageTravelTimePerVehicle(int num_vertices, node** matrix);
-    void findAllPaths(char startc, char endc, road_closures& roadChecker);
+    void processVehicles(string csv);
+    void printRoadUsage();
     void findShortestPathDijkstra(int start, int end, int* pathTaken, road_closures& roadChecker);
+    void printPath(int* pathTaken, int start, int end);
+    void NumOfVehicles(string csv);
     void findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound, road_closures& roadChecker);
+    void findAllPaths(char startc, char endc, road_closures& roadChecker);
+    void averageTravelTimePerVehicle(int num_vertices, node** matrix);
+    int* findAlternativePath(char startc, char endc, road_closures& roadChecker);
 };
+
 #endif
