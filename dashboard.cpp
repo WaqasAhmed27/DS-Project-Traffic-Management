@@ -40,6 +40,8 @@ void Dashboard::Simulate() {
 
         if (choice == 12) 
         {
+            //quit
+            cout << "Exiting...\n";
             break;
         } 
         else if (choice == 1) 
@@ -57,12 +59,20 @@ void Dashboard::Simulate() {
             int time;
             cout << "Enter Intersection ID: ";
             cin >> id;
-            cout << "New timing: ";
+
+            if(id < 'A' || id > 'Z')
+            {
+                cout << "Invalid Intersection ID\n";
+                continue;
+            }
+
+            cout << "New timing (in seconds): ";
             cin >> time;
 
             if (time <= 0) 
             {
                 cout << "Invalid time entered\n";
+                continue;
             } 
             else 
             {
@@ -80,8 +90,18 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Emergency Vehicles\n";
             cout << "Start: ";
             cin >> start;
+            if(start < 'A' || start > 'Z')
+            {
+                cout << "Invalid Start Intersection ID\n";
+                continue;
+            }
             cout << "End: ";
             cin >> end;
+            if(end < 'A' || end > 'Z')
+            {
+                cout << "Invalid End Intersection ID\n";
+                continue;
+            }
             int start_index = start - 'A';
             int end_index = end - 'A';
             int pathTakenEV[NUM_VERTICES];
@@ -95,8 +115,18 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Road Closure\n";
             cout << "Start: ";
             cin >> start;
+            if(start < 'A' || start > 'Z')
+            {
+                cout << "Invalid Start Intersection ID\n";
+                continue;
+            }
             cout << "End: ";
             cin >> end;
+            if(end < 'A' || end > 'Z')
+            {
+                cout << "Invalid End Intersection ID\n";
+                continue;
+            }
             closures.block_road(start, end);
         } 
         else if (choice == 7) 
@@ -105,8 +135,18 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Vehicle Routing\n";
             cout << "Start: ";
             cin >> start;
+            if(start < 'A' || start > 'Z')
+            {
+                cout << "Invalid Start Intersection ID\n";
+                continue;
+            }
             cout << "End: ";
             cin >> end;
+            if(end < 'A' || end > 'Z')
+            {
+                cout << "Invalid End Intersection ID\n";
+                continue;
+            }
             vehicles.findAllPaths(start, end, closures);
         } 
         else if (choice == 8) 
@@ -121,8 +161,18 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Shortest Path\n";
             cout << "Start: ";
             cin >> start;
+            if(end < 'A' || end > 'Z')
+            {
+                cout << "Invalid Start Intersection ID\n";
+                continue;
+            }
             cout << "End: ";
             cin >> end;
+            if(end < 'A' || end > 'Z')
+            {
+                cout << "Invalid End Intersection ID\n";
+                continue;
+            }
             int start_index = start - 'A';
             int end_index = end - 'A';
             int pathTaken[NUM_VERTICES];
