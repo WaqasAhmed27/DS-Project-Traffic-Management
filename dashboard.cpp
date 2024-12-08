@@ -215,8 +215,7 @@ void Dashboard::Simulate() {
             int end_index = end - 'A';
             int pathTaken[NUM_VERTICES];
             vehicles.findShortestPathDijkstra(start_index, end_index, pathTaken, closures);
-            cout << "Path " << char(start_index + 'A') << " to " 
-                      << char(end_index + 'A') << ": ";
+            cout << "Path " << char(start_index + 'A') << " to " << char(end_index + 'A') << ": ";
             vehicles.printPath(pathTaken, start_index, end_index);
         } 
         else if (choice == 10) 
@@ -225,10 +224,12 @@ void Dashboard::Simulate() {
         } 
         else if (choice == 11) 
         {
+            cout<<"Number of vehicles on each road: "<<endl;
             vehicles.averageTravelTimePerVehicle(NUM_VERTICES, network.getmatrix());
         }
         else if(choice == 12)
         {
+            court << "Average Travel Time Per Vehicle: "<<endl;
             heap.reduceCongestion(heap.FindMostCongestedRoad(), network.getmatrix(), NUM_VERTICES, closures, vehicles);   
         } 
         else 
