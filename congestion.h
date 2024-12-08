@@ -57,6 +57,7 @@ public:
     void NumOfVehicles(string csv);
     void findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound, road_closures& roadChecker);
     void findAllPaths(char startc, char endc, road_closures& roadChecker);
+    void averageTravelTimePerVehicle(int num_vertices, node** matrix);
 };
 
 #endif
