@@ -327,7 +327,9 @@ heapNode::heapNode(int num_of_vehicles, char start_intersection, char end_inters
 
 heapNode::heapNode() 
 {
-    this->num_of_vehicles = 0;
+    this->num_of_vehicles=0;
+    this->start_intersection = 'A';
+    this->end_intersection = 'A';
     left = right = nullptr;
 }
 // Constructor
@@ -399,7 +401,7 @@ void MinHeap::heapifyup(heapNode* node)
     
     heapNode* parent = findParent(root, node);
 
-    if (parent != nullptr && parent->num_of_vehicles < node->num_of_vehicles) {
+    if (parent != nullptr && parent->num_of_vehicles > node->num_of_vehicles) {
         swap(parent->num_of_vehicles, node->num_of_vehicles);
         swap(parent->start_intersection, node->start_intersection);
         swap(parent->end_intersection, node->end_intersection);
@@ -418,7 +420,7 @@ void MinHeap::insert(int num_of_vehicles, char start_intersection, char end_inte
     else 
     {
         int no_of_nodes = countnodes(root);// Count the number of nodes in the heap
-        heapNode* point = findnode(root, no_of_nodes); //Finding the point at which the new node is to be inserted
+        heapNode* point = findnode(root, (no_of_nodes - 1) / 2); //Finding the point at which the new node is to be inserted
 
         // Insert the new node as the left child if the left child is empty and if not insert as the right child
         if (point->left == nullptr) 
