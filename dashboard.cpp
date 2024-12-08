@@ -59,8 +59,11 @@ void Dashboard::Simulate() {
             int time;
             cout << "Enter Intersection ID: ";
             cin >> id;
-
-            if(id < 'A' || id > 'Z')
+            if(id >= 'a' && id <= 'z')
+            {
+                id -= 32;
+            }
+            else if(id < 'A' || id > 'Z')
             {
                 cout << "Invalid Intersection ID\n";
                 continue;
@@ -90,13 +93,21 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Emergency Vehicles\n";
             cout << "Start: ";
             cin >> start;
-            if(start < 'A' || start > 'Z')
+            if(start >= 'a' && start <= 'z')
+            {
+                start -= 32;
+            }
+            else if(start < 'A' || start > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
                 continue;
             }
             cout << "End: ";
             cin >> end;
+            if(end >= 'a' && end <= 'z')
+            {
+                end -= 32;
+            }
             if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid End Intersection ID\n";
@@ -115,6 +126,10 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Road Closure\n";
             cout << "Start: ";
             cin >> start;
+            if(start >= 'a' && start <= 'z')
+            {
+                start -= 32;
+            }
             if(start < 'A' || start > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
@@ -122,6 +137,10 @@ void Dashboard::Simulate() {
             }
             cout << "End: ";
             cin >> end;
+            if(end >= 'a' && end <= 'z')
+            {
+                end -= 32;
+            }
             if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid End Intersection ID\n";
@@ -135,6 +154,10 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Vehicle Routing\n";
             cout << "Start: ";
             cin >> start;
+            if(start >= 'a' && start <= 'z')
+            {
+                start -= 32;
+            }
             if(start < 'A' || start > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
@@ -142,6 +165,10 @@ void Dashboard::Simulate() {
             }
             cout << "End: ";
             cin >> end;
+            if(end >= 'a' && end <= 'z')
+            {
+                end -= 32;
+            }
             if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid End Intersection ID\n";
@@ -161,6 +188,10 @@ void Dashboard::Simulate() {
             cout << "Enter Start And End Intersection For Shortest Path\n";
             cout << "Start: ";
             cin >> start;
+            if(start >= 'a' && start <= 'z')
+            {
+                start -= 32;
+            }
             if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
@@ -168,6 +199,10 @@ void Dashboard::Simulate() {
             }
             cout << "End: ";
             cin >> end;
+            if(end >= 'a' && end <= 'z')
+            {
+                end -= 32;
+            }
             if(end < 'A' || end > 'Z')
             {
                 cout << "Invalid End Intersection ID\n";
