@@ -298,6 +298,16 @@ void Vehicles::findAllPaths(char startc, char endc, road_closures& roadChecker)
     delete[] path;   
 }
 
+void Vehicles::averageTravelTimePerVehicle(int num_vertices, node** matrix) {
+    for (int i = 0; i < num_vertices; i++) {
+        for (int j = 0; j < num_vertices; j++) {
+            if (matrix[i][j].numofvehicles > 0) {  // Print if vehicles present
+                cout << "Average travel time per vehicle from " << char(i + 'A') << " to " << char(j + 'A') << " is " 
+                     << matrix[i][j].distance / matrix[i][j].numofvehicles << " units." << endl;
+            }
+        }
+    }
+}
 
                                             ////////////Heap Implementation To find the most congested road/////////////////////
 
