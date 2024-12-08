@@ -3,21 +3,61 @@
                                             ///////////Implementation of Vehicles class///////////////////////
 
 
-Vehicles::Vehicles(int num_vertices, node** matrix) {
-    this->matrix = matrix;
-    this->num_vertices = num_vertices;
+Vehicles::Vehicles(int num_vertices, node** matrix, int tableSize) : num_vertices(num_vertices), matrix(matrix), tableSize(100) {
 
+    roadUsage = new int*[num_vertices];
+    for (int i = 0; i < num_vertices; i++) {
+        roadUsage[i] = new int[num_vertices];
+        for (int j = 0; j < num_vertices; j++) {
+            roadUsage[i][j] = 0;
+        }
+    }
+
+    // Initialize hash table
+    hashTable = new VehicleDetails[tableSize];
+    for (int i = 0; i < tableSize; i++) {
+        hashTable[i].isOccupied = false;  // Mark all slots as empty initially
+    }
 }
 
-Vehicles::~Vehicles() {}
+Vehicles::~Vehicles() {
+    for (int i = 0; i < num_vertices; i++) {
+        delete[] roadUsage[i];
+    }
+    delete[] roadUsage;
+    delete[] hashTable;
+}
 
 void Vehicles::updateRoadUsage(int start, int end, int* pathTaken) {
     int current = end;
     while (pathTaken[current] != -1) {
         int prev = pathTaken[current];
         matrix[prev][current].numofvehicles++;
+        roadUsage[prev][current]++;
         current = prev;
     }
+}
+
+int Vehicles::hashFunction(string StartIntersection) {
+    int index = 0;
+    for (char c : StartIntersection) {
+        index = (index * 31 + c) % tableSize;
+    }
+    return index;
+}
+
+void Vehicles::insertToHashTable(string StartIntersection) {
+    int index = hashFunction(StartIntersection);
+    while (hashTable[index].isOccupied) { // Linear
+        if (hashTable[index].StartIntersection == StartIntersection) {
+            hashTable[index].vehicleCount++;
+            return;
+        }
+        index = (index + 1) % tableSize;  // Next index
+    }
+    hashTable[index].StartIntersection = StartIntersection; // If slot is empty - insert the entry
+    hashTable[index].vehicleCount = 1;
+    hashTable[index].isOccupied = true;
 }
 
 //Funciton to find the shortest path between two intersections
@@ -60,33 +100,31 @@ void Vehicles::processVehicles(string csv) {
         return;
     }
 
-    getline(file, line); // Skip the header
+    getline(file, line);  // Skip header line
     while (getline(file, line)) {
         istringstream stream(line);
         string vehicleID, start, end;
         getline(stream, vehicleID, ',');
         getline(stream, start, ',');
         getline(stream, end, ',');
-
         char start_intersection = start[0];
         char end_intersection = end[0];
-
         int start_index = start_intersection - 65;
         int end_index = end_intersection - 65;
-
         int* pathTaken = new int[num_vertices];
         for (int i = 0; i < num_vertices; i++) {
             pathTaken[i] = -1;
         }
-
         findShortestPath(start_index, end_index, pathTaken);
         updateRoadUsage(start_index, end_index, pathTaken);
+
+        string StartIntersection = start;
+        insertToHashTable(StartIntersection);
+
         delete[] pathTaken;
     }
-
     file.close();
 }
-
 
 //Print the road usage( Displaying the number of vehicles on each road)
 void Vehicles::printRoadUsage() {
@@ -100,6 +138,13 @@ void Vehicles::printRoadUsage() {
     }
 }
 
+void Vehicles::printVehicleDetails() {
+    for (int i = 0; i < tableSize; i++) {
+        if (hashTable[i].isOccupied) {
+            cout << hashTable[i].StartIntersection << " : " << hashTable[i].vehicleCount << " vehicles" << endl;
+        }
+    }
+}
 
 // Function to find the shortest path between two intersections using Dijkstra's algorithm
 void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, road_closures& road_checker) {
