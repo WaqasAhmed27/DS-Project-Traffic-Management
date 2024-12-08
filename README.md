@@ -118,7 +118,7 @@ graph TD
    ```
    or alternatively:
    ```bash
-   g++ main.cpp trafficSignal.cpp trafficNetwork.cpp congestion.cpp roadClosures.cpp -o TrafficManagement
+   g++ main.cpp trafficSignal.cpp trafficNetwork.cpp congestion.cpp roadClosures.cpp EVHandling.cpp dashboard.cpp -o TrafficManagement
    ```
 
 2. **Run the Simulator**
