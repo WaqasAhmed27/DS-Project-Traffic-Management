@@ -23,6 +23,7 @@ class road_closures
         void display_underrepair_roads();
         void display_clear_roads();
         void display_all_roads();
+        bool is_path_blocked(char start_intersection, char end_intersection);
 
 };
 

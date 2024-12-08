@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include "trafficNetwork.h"
+#include "roadClosures.h"
 
 #define INT_MAX 2147483647      //Bohot bara number
 
@@ -51,7 +52,7 @@ public:
     void findShortestPath(int start, int end, int* pathTaken);
     void processVehicles(string csv);
     void printRoadUsage();
-    void findShortestPathDijkstra(int start, int end, int* pathTaken);
+    void findShortestPathDijkstra(int start, int end, int* pathTaken, road_closures& roadChecker);
     void printPath(int* pathTaken, int start, int end);
     void NumOfVehicles(string csv);
     void findAllPathsHelper(int current, int end, bool* visited, int* path, int path_index, bool& pathFound);

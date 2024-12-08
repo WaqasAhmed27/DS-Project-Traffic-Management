@@ -109,3 +109,22 @@ void road_closures::display_all_roads()
         }
     }
 }
+
+bool road_closures::is_path_blocked(char start_intersection, char end_intersection) {
+    int start_index = start_intersection - 'A';
+    int end_index = end_intersection - 'A';
+
+    if (start_index < 0 || start_index >= num_vertices ||  end_index < 0 || end_index >= num_vertices) {
+        cout << "Error: Invalid intersections provided." << endl;
+        return false; // Returning false if invalid indices are provided
+    }
+
+    // Check the status of the path
+    if (matrix[start_index][end_index].status == "Blocked") 
+    {
+        return true; // Path is blocked
+    }
+
+    return false; // Path is not blocked
+}
+
