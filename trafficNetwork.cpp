@@ -1,5 +1,32 @@
 #include "trafficNetwork.h"
 
+EV_vehicles::EV_vehicles()
+{
+    id = "";
+    status = "";
+}
+
+EV_vehicles::EV_vehicles(string id, string status)
+{
+    this->id = id;
+    this->status = status;
+}
+
+EV_vehicles::~EV_vehicles()
+{
+
+}
+string EV_vehicles::getid()
+{
+    return id;
+}
+
+string EV_vehicles::getstatus()
+{
+    return status;
+}
+
+
 // Constructor for node
 node::node() : distance(0), intersection(' ') {}
 
@@ -9,6 +36,7 @@ node::node(int distance, char intersection, string status)
     this->intersection = intersection;
     this->status = status;
     this->numofvehicles=0;
+
 }
 
 // Constructor for TrafficNetwork

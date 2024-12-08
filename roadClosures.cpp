@@ -10,8 +10,24 @@ void road_closures::block_road(char start_intersection, char end_intersection)
 {
     int start_index = start_intersection - 'A';
     int end_index = end_intersection - 'A';
+    
+    if(matrix[start_index][end_index].distance == 0)
+    {
+        cout<<"Error: Road does not exist between "<<start_intersection<<" and "<<end_intersection<<endl;
+        return;
+    }
 
-    matrix[start_index][end_index].status = "Blocked";
+    if(matrix[start_index][end_index].status == "Blocked")
+    {
+        cout<<"Error: Road is already blocked"<<endl;
+        return;
+    }  
+
+    else
+    {
+        cout<<"Blocking road from "<<start_intersection<<" to "<<end_intersection<<endl;
+         matrix[start_index][end_index].status = "Blocked";
+    }
 }
 
 void road_closures::clear_road(char start_intersection, char end_intersection)
@@ -19,7 +35,17 @@ void road_closures::clear_road(char start_intersection, char end_intersection)
     int start_index = start_intersection - 'A';
     int end_index = end_intersection - 'A';
 
-    matrix[start_index][end_index].status = "Clear";
+    if(matrix[start_index][end_index].status == "Clear")
+    {
+        cout<<"Error: Road is already clear"<<endl;
+        return;
+    }
+    else
+    {
+        cout<<"Clearing road from "<<start_intersection<<" to "<<end_intersection<<endl;
+        matrix[start_index][end_index].status = "Clear";
+    }
+   
 }
 
 void road_closures::processRoadClosures(string csv)

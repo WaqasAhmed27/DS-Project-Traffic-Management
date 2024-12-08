@@ -5,13 +5,29 @@
 #include <fstream>
 using namespace std;
 
+
+class EV_vehicles
+{
+private:
+    string id;
+    string status;
+
+public:
+    EV_vehicles();
+    ~EV_vehicles();
+    EV_vehicles(string id, string status);
+    string getid();
+    string getstatus();
+};
+
+
 class node
 {
 public:
-    int distance;
-    char intersection;
-    string status;
-    int numofvehicles;
+    int distance;       //Distance between two intersections
+    char intersection;  //Intersection
+    string status;      //Road status
+    int numofvehicles; //Number of vehicles on the road
 
     node();
     node(int distance, char intersection, string status);

@@ -17,6 +17,7 @@ struct heapNode
     heapNode* right;
     char start_intersection;
     char end_intersection;
+    heapNode();
     heapNode(int num_of_vehicles, char start_intersection, char end_intersection);
 };
 
