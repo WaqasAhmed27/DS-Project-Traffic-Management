@@ -229,7 +229,7 @@ void Dashboard::Simulate() {
         }
         else if(choice == 12)
         {
-            court << "Average Travel Time Per Vehicle: "<<endl;
+            cout << "Average Travel Time Per Vehicle: "<<endl;
             heap.reduceCongestion(heap.FindMostCongestedRoad(), network.getmatrix(), NUM_VERTICES, closures, vehicles);   
         } 
         else 
