@@ -102,7 +102,7 @@ void Vehicles::printRoadUsage() {
 
 
 // Function to find the shortest path between two intersections using Dijkstra's algorithm
-void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, road_closures& roadChecker) {
+void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, road_closures& road_checker) {
     int* dist = new int[num_vertices];       // Array to store shortest distances
     bool* visited = new bool[num_vertices]; // Array to mark visited nodes
 
@@ -115,41 +115,39 @@ void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, roa
 
     dist[start] = 0; // Distance to the start node is 0
 
-    for (int count = 0; count < num_vertices - 1; count++) 
-    {
+    for (int count = 0; count < num_vertices - 1; count++) {
         // Find the vertex with the minimum distance value, from the set of vertices not yet visited
         int min_dist = INT_MAX, min_index = -1;
-        for (int i = 0; i < num_vertices; i++) 
-        {
-            if (!visited[i] && dist[i] < min_dist) 
-            {
+        for (int i = 0; i < num_vertices; i++) {
+            if (!visited[i] && dist[i] < min_dist) {
                 min_dist = dist[i];
                 min_index = i;
             }
         }
 
-        if (min_index == -1) 
-        {
+        if (min_index == -1) {
             break; // No more reachable nodes
         }
 
         visited[min_index] = true; // Mark the vertex as visited
 
         // Update distance value for the adjacent vertices
-        for (int i = 0; i < num_vertices; i++) 
-        {
-            // Check if the path is blocked before considering this edge
-            if (!visited[i] && matrix[min_index][i].distance > 0) 
-            {
-                if (roadChecker.is_path_blocked(char(min_index + 'A'), char(i + 'A'))) 
-                {
-                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') << " is blocked. Rerouting...\n";
+        for (int i = 0; i < num_vertices; i++) {
+            // Skip the paths that are blocked or under repair
+            if (!visited[i] && matrix[min_index][i].distance > 0) {
+                if (road_checker.is_path_blocked(char(min_index + 'A'), char(i + 'A'))) {
+                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') 
+                         << " is blocked. Rerouting...\n";
                     continue; // Skip blocked paths
+                }
+                if (road_checker.is_path_underrepair(char(min_index + 'A'), char(i + 'A'))) {
+                    cout << "Path from " << char(min_index + 'A') << " to " << char(i + 'A') 
+                         << " is under repair. Rerouting...\n";
+                    continue; // Skip paths under repair
                 }
 
                 int new_dist = dist[min_index] + matrix[min_index][i].distance;
-                if (new_dist < dist[i]) 
-                {
+                if (new_dist < dist[i]) {
                     dist[i] = new_dist;
                     path_taken[i] = min_index; // Update the path
                 }
@@ -158,12 +156,9 @@ void Vehicles::findShortestPathDijkstra(int start, int end, int* path_taken, roa
     }
 
     // Print shortest distance
-    if (dist[end] == INT_MAX) 
-    {
+    if (dist[end] == INT_MAX) {
         cout << "No path exists between nodes " << char(start + 'A') << " and " << char(end + 'A') << endl;
-    } 
-    else 
-    {
+    } else {
         cout << "\nShortest distance from " << char(start + 'A') << " to " << char(end + 'A') << " is " << dist[end] << endl;
     }
 
