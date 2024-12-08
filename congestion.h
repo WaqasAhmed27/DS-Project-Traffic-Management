@@ -34,7 +34,7 @@ private:
 public:
     MinHeap();
     void insert(int num_of_vehicles, char start_intersection, char end_intersection);
-    void custructMinHeap(node** matrix, int num_vertices);
+    void constructMinHeap(node** matrix, int num_vertices);
     heapNode* exractMaxNode(heapNode*& root);
     heapNode* FindMostCongestedRoad();
     void display();

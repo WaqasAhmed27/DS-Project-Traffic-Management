@@ -420,7 +420,7 @@ void MinHeap::insert(int num_of_vehicles, char start_intersection, char end_inte
     else 
     {
         int no_of_nodes = countnodes(root);// Count the number of nodes in the heap
-        heapNode* point = findnode(root, (no_of_nodes - 1) / 2); //Finding the point at which the new node is to be inserted
+        heapNode* point = findnode(root, (no_of_nodes - 1)); //Finding the point at which the new node is to be inserted
 
         // Insert the new node as the left child if the left child is empty and if not insert as the right child
         if (point->left == nullptr) 
@@ -438,7 +438,7 @@ void MinHeap::insert(int num_of_vehicles, char start_intersection, char end_inte
 }
 
 // Function to construct the min heap from the given num of vehicles on each road in the matrix 
-void MinHeap::custructMinHeap(node** matrix, int num_vertices)
+void MinHeap::constructMinHeap(node** matrix, int num_vertices)
 {
     for(int i =0; i<num_vertices; i++)
     {
