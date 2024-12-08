@@ -195,7 +195,7 @@ void Dashboard::Simulate() {
             {
                 start -= 32;
             }
-            if(end < 'A' || end > 'Z')
+            if(start < 'A' || start > 'Z')
             {
                 cout << "Invalid Start Intersection ID\n";
                 continue;
